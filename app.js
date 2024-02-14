@@ -1,4 +1,4 @@
-import page from "./node_modules/page/page.mjs";
+import page from "./lib/page/page.mjs";
 
 import { home } from "./src/home.js";
 import { library } from "./src/library.js";

@@ -1,5 +1,5 @@
-import {html} from "../node_modules/lit-html/lit-html.js";
-import page from "../node_modules/page/page.mjs";
+import {html} from "../lib/lit-html/lit-html.js";
+import page from "../lib/page/page.mjs";
 
 export async function library(ctx,myctx){
     const loading=()=>html`<p>loading</p>`
