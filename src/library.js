@@ -1,26 +1,29 @@
-import { render,html } from "../node_modules/lit-html/lit-html.js";
+import {html} from "../node_modules/lit-html/lit-html.js";
+import page from "../node_modules/page/page.mjs";
 
-
-
-
-export async function library(ctx){
-
-  const data = await (await fetch("https://swapi.dev/api/")).json();
-  const rows = Array.from(Object.keys(data));
-
+export async function library(ctx,myctx){
+    const loading=()=>html`<p>loading</p>`
+    myctx.renderTemplate(loading);
+    const data  = await myctx.getData("");
+    const categories = Array.from(Object.keys(data));
+    
+    const categoriesHTML = categories.map(categoryName => html`
+    <li>
+        <a 
+            @click=${(e)=>myctx.callPath(e,"/library/" + categoryName + "/page/1")} 
+            href=${"/library/" + categoryName + "/page/1/"}
+        >
+            ${categoryName}
+        </a>
+    </li>`);
+   
     const template = () => html`
-
-      <div class="library-container">
-        <div>
-          <form>
-            <input type="text">
-            <input type="submit" value="Search">
-          </form>
-        </div>
-        ${rows.map(r => html`<a href=${"/library/" + r}>${r}</a>`)}
-      </div>
+    <ul class="col">
+        ${categoriesHTML}
+    </ul>
     `;
     
     
-    render(template(),ctx.main);
-}
+    myctx.renderTemplate(template);
+    
+}  

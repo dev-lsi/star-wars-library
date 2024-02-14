@@ -1,38 +1,27 @@
 import page from "./node_modules/page/page.mjs";
+
 import { home } from "./src/home.js";
-import { about } from "./src/about.js";
-import { contacts } from "./src/contacts.js";
 import { library } from "./src/library.js";
-import {subLibrary} from "./src/subLibrary.js"
+import { about } from "./src/about.js";
 import { login } from "./src/login.js";
-import { loadHeader } from "./templates/header-template.js";
+import { notFound } from "./src/notFound.js";
+import { category } from "./src/category.js";
+import {myctx} from "./util/myctx.js"
+import { unit } from "./src/unit.js";
 
-document.addEventListener('DOMContentLoaded', app);
 
-function app() {
 
-    const main = document.querySelector('main');
-    const ctx = {
-        main
-    };
+async function app() {
 
-    loadHeader(ctx);
-    let pageNum="";
-    let category="";
-
-    page('/', '/index.html');
-    page('/index.html', () => home(ctx));
-    page('/about', () => about(ctx));
-    page('/contacts', () => contacts(ctx));
-    page('/library', () => library(ctx));
-    page(`/library/people/${pageNum}`, () => subLibrary(ctx,"people",pageNum));
-    page(`/library/species/${pageNum}`, () => subLibrary(ctx,"species",pageNum));
-    page(`/library/planets/${pageNum}`, () => subLibrary(ctx,"planets",pageNum));
-    page(`/library/starships/${pageNum}`, () => subLibrary(ctx,"starships",pageNum));
-    page(`/library/vehicles/${pageNum}`, () => subLibrary(ctx,"vehicles",pageNum));
-    page(`/library/films/${pageNum}`, () => subLibrary(ctx,"films",pageNum));
-
-    page('/login', () => login(ctx));
+    page('/index.html',"/");
+    page('/',(ctx)=>home(ctx,myctx));
+    page('/library',(ctx)=>library(ctx,myctx));
+    page('/library/:category/page/:pageNumber',(ctx)=>category(ctx,myctx));
+    page('/library/:category/item/:itemId',(ctx)=>unit(ctx,myctx));
+    page('/about',(ctx)=> about(ctx,myctx));
+    page('/login',(ctx)=> login(ctx,myctx));
+    page('/*', (ctx)=>notFound(ctx,myctx));
     page.start();
-
 }
+
+app();

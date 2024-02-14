@@ -1,8 +1,0 @@
-main {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    color:gold;
-    background-color: rgb(1, 13, 24);
-    padding-top: 6em; 
-}
