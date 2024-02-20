@@ -5,10 +5,7 @@ export async function unit(ctx, myctx) {
 
     const canvas=document.querySelector('.canvas');
     canvas.style.display="flex";
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+    
 
     const category = ctx.params.category;
     const itemId = ctx.params.itemId;
@@ -16,7 +13,9 @@ export async function unit(ctx, myctx) {
     const data = await myctx.getData(category + "/" + itemId);
     console.log(data)
     const dataKeysArr = Array.from(Object.keys(data));
-
+    if(!dataKeysArr){
+        alert("data===null")
+    }
     const rows = Promise.all(dataKeysArr.map(async k => {
         
         if( k=='url' || k=='edited' || k=="created" || k =="episode_id"||k=="title"||k=="name"){ // data[k] is Unused
@@ -25,7 +24,7 @@ export async function unit(ctx, myctx) {
         }
         
         if((data[k].indexOf("https") !== -1)){ //data[k] is a single link
-            console.log("data[k] is a single link: " + data[k]+"typeof= "+typeof data[k]);
+            
             const url = data[k];
             const id = myctx.getId(url);
 
@@ -41,17 +40,21 @@ export async function unit(ctx, myctx) {
                 category=k;
             }
 
-            return html`<h2>${k.replace("_"," ")}</h2><a href=${"/library/" + category + "/item/" + id}>${unitName}</a>`;
+            return html`
+            <h5>${k.replace("_"," ").toUpperCase()}</h5>
+            <a class=${"library-link"} href=${"/library/" + category + "/item/" + id}>${unitName}</a>`;
         }
         
         if(!(Array.isArray(data[k]))){  // data[k] is not array 
             
-            console.log("data[k] is not array: "+ k)
-            return html`<p>${k.replace("_"," ") + ": " + data[k]}</p>`;
+            
+            return html`<div><span class="data-name">${k.replace("_"," ") + ": "}</span><span class="data-content">${data[k]}</span></div>`;
         }   
 
         if ( Array.isArray(data[k])) { //data[k] is array of links
-            console.log(k + " array of lenght: " + data[k].length) 
+            if(data[k].length===0){
+                return "---";
+            }
             const linksArr = data[k];
             
             const unitsDataArr = Promise.all(linksArr.map(async currentLink => {
@@ -68,22 +71,29 @@ export async function unit(ctx, myctx) {
                     category=k;
                 }
                 
-                return html`<a href=${"/library/" + category + "/item/" + id}>${unitName}</a>`;
+                return html`
+                <a  class=${"library-link"}
+                    href=${"/library/" + category + "/item/" + id}>${unitName}
+                </a>`;
             })); 
 
             const unitsDataArrResolved = await unitsDataArr;
             return html`
-                <h2>${k.replace("_"," ")}</h2>
+                <h5>${k.replace("_"," ").toUpperCase()}</h5>
                 ${unitsDataArrResolved}
             `;
         };
     }));
      
     const rowsResolved = await rows;
-    console.log(rowsResolved)
-    const template=()=>html`<h2>${data.name||data.title}</h2>${rowsResolved}`;
+   
+    const template=()=>html`<h1>${data.name||data.title}</h1><div class="rows-div">${rowsResolved}</div>`;
     myctx.renderTemplate(template); 
-
+    
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     canvas.style.display="none";   
 }                
             

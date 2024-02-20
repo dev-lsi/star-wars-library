@@ -1,5 +1,5 @@
 import {html} from "../lib/lit-html/lit-html.js";
-import page from "../lib/page/page.mjs";
+
 
 export async function library(ctx,myctx){
     const loading=()=>html`<p>loading</p>`
@@ -9,15 +9,16 @@ export async function library(ctx,myctx){
     
     const categoriesHTML = categories.map(categoryName => html`
     <li>
-        <a 
+        <a  class=${"library-link"}
             @click=${(e)=>myctx.callPath(e,"/library/" + categoryName + "/page/1")} 
             href=${"/library/" + categoryName + "/page/1/"}
         >
-            ${categoryName}
+            ${categoryName.toUpperCase()}
         </a>
     </li>`);
    
     const template = () => html`
+    <h1>StarWars Library</h1>
     <ul class="col">
         ${categoriesHTML}
     </ul>
