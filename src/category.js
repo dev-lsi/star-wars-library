@@ -56,7 +56,9 @@ export async function category(ctx, myctx) {
             </a>
         </div>
     `;
-
+   
+   const main=document.querySelector("main")
+   main.classList.add("planets")
     myctx.renderTemplate(template);
     canvas.style.display="none";
 }

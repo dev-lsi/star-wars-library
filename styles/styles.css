@@ -142,4 +142,9 @@ h5{
     row-gap: 0.2em;
 }
 
+.planets{
+    background-image: url("../images/planets/Iktotch.gif");
+    background-size: cover;
+}
+
 
